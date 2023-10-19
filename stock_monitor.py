@@ -73,8 +73,12 @@ def main():
     parser.add_argument('-delay', '--time_delay', type=float, default=30, help='Call delay to the API, in seconds')
     parser.add_argument('-uind', '--use_index', action='store_true', default=None, help='Use index')
 
+    
     args = parser.parse_args()
-    quoter(args)
+    if args.time_delay > 0:
+        quoter(args)
+    else:
+        parser.error(Fore.RED+Style.BRIGHT+"time delay value must be greater than 0"+Fore.RESET+Style.RESET_ALL)
 
 if __name__ == '__main__':
     main()
