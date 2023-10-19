@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 from pprint import pprint
 import argparse
-import re
 import yfinance as yf
 from pynput import keyboard
 from colorama import init, Fore, Back, Style
@@ -28,7 +27,7 @@ def quoter(args):
     else:
         ticker_symbol = args.ticker
     try:
-        print(Fore.BLACK + Back.WHITE + f"\nREAL TIME {args.ticker} QUOTATION -[PRESS SPACE BAR TO EXIT]" + Fore.RESET + Back.RESET)
+        print(Fore.BLACK + Back.WHITE + f"\nREAL TIME {ticker_symbol} QUOTATION -[PRESS SPACE BAR TO EXIT]" + Fore.RESET + Back.RESET)
         while stop == False:
             stock_data = yf.download(ticker_symbol, period="1d",interval="1m").tail(1)
             #print(stock_data)
@@ -54,7 +53,7 @@ def quoter(args):
                 color = Fore.GREEN
                 line_color = Fore.GREEN
             
-            print(line_color + Style.BRIGHT + f"{current_datetime} | Ticker: {args.ticker} | Low: {last_low_price:.2f} | High: {last_high_price:.2f} | Open: {last_open_price:.2f} |"
+            print(line_color + Style.BRIGHT + f"{current_datetime} | Ticker: {ticker_symbol} | Low: {last_low_price:.2f} | High: {last_high_price:.2f} | Open: {last_open_price:.2f} |"
                   f" Volume: {last_volume:.2f} | Close: " + color + f"{last_close_price:.2f}" + Fore.RESET + Style.RESET_ALL)
 
             prev_value = last_close_price
