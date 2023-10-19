@@ -67,13 +67,12 @@ def quoter(args):
         print(Fore.RED + Style.BRIGHT + str(e) + Fore.RESET + Style.RESET_ALL)
 
 def main():
-    parser = argparse.ArgumentParser(prog="QUOTER 0.0",description="Show quotes in real time")
+    parser = argparse.ArgumentParser(prog="STOCK MONITOR 0.1",description="Show quotes in real time")
     parser.add_argument('-tick', '--ticker', required=True, type=str, help='Ticker name')
     parser.add_argument('-clr', '--color', action='store_true', help='Use this action for color close values')
     parser.add_argument('-delay', '--time_delay', type=float, default=30, help='Call delay to the API, in seconds')
     parser.add_argument('-uind', '--use_index', action='store_true', default=None, help='Use index')
 
-    
     args = parser.parse_args()
     if args.time_delay > 0:
         quoter(args)
