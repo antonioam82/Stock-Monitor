@@ -22,6 +22,7 @@ def quoter(args):
     listener = keyboard.Listener(on_press=on_press)
     listener.start()
     prev_value = ""
+    
     if args.use_index:
         ticker_symbol = '^'+args.ticker
     else:
@@ -73,11 +74,12 @@ def main():
     parser.add_argument('-delay', '--time_delay', type=float, default=30, help='Call delay to the API, in seconds')
     parser.add_argument('-uind', '--use_index', action='store_true', default=None, help='Use index')
 
+    
     args = parser.parse_args()
-    if args.time_delay > 0:
+    if args.time_delay >= 0.5:
         quoter(args)
     else:
-        parser.error(Fore.RED+Style.BRIGHT+"time delay value must be greater than 0"+Fore.RESET+Style.RESET_ALL)
+        parser.error(Fore.RED+Style.BRIGHT+"time delay value must be greater than or equal to 0.5"+Fore.RESET+Style.RESET_ALL)
 
 if __name__ == '__main__':
     main()
