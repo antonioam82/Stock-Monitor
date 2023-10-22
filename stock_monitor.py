@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from pprint import pprint
 import argparse
 import yfinance as yf
 from pynput import keyboard
@@ -74,8 +73,7 @@ def main():
     parser.add_argument('-clr', '--color', action='store_true', help='Use this action for color close values')
     parser.add_argument('-delay', '--time_delay', type=float, default=30, help='Call delay to the API, in seconds')
     parser.add_argument('-uind', '--use_index', action='store_true', default=None, help='Use index')
-
-    
+ 
     args = parser.parse_args()
     if args.time_delay >= 0.5:
         quoter(args)
@@ -84,3 +82,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
