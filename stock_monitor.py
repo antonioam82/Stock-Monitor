@@ -40,6 +40,7 @@ def quoter(args):
             last_volume = stock_data["Volume"].iloc[-1]
 
             current_datetime = stock_data.index[-1]
+            dec = args.decimals
 
             if args.color:
                 line_color = Fore.BLUE
@@ -53,8 +54,8 @@ def quoter(args):
                 color = Fore.GREEN
                 line_color = Fore.GREEN
             
-            print(line_color + Style.BRIGHT + f"{current_datetime} | Ticker: {ticker_symbol} | Low: {last_low_price:.2f} | High: {last_high_price:.2f} | Open: {last_open_price:.2f} |"
-                  f" Volume: {last_volume:.2f} | Close: " + color + f"{last_close_price:.2f}" + Fore.RESET + Style.RESET_ALL)
+            print(line_color + Style.BRIGHT + f"{current_datetime} | Ticker: {ticker_symbol} | Low: {last_low_price:.{dec}f} | High: {last_high_price:.{dec}f} | Open: {last_open_price:.{dec}f} |"
+                  f" Volume: {last_volume:.{dec}f} | Close: " + color + f"{last_close_price:.{dec}f}" + Fore.RESET + Style.RESET_ALL)
 
             prev_value = last_close_price
             time.sleep(args.time_delay)
@@ -67,13 +68,15 @@ def quoter(args):
         print(Fore.RED + Style.BRIGHT + str(e) + Fore.RESET + Style.RESET_ALL)
 
 def main():
-    parser = argparse.ArgumentParser(prog="STOCK MONITOR 0.1",description="Show stock quotation in real time",
+    parser = argparse.ArgumentParser(prog="STOCK MONITOR 1.0",description="Show stock quotation in real time",
                                      epilog="REPO:https://github.com/antonioam82/Stock-Monitor")
     parser.add_argument('-tick', '--ticker', required=True, type=str, help='Ticker name')
     parser.add_argument('-clr', '--color', action='store_true', help='Use this action for color close values')
     parser.add_argument('-delay', '--time_delay', type=float, default=30, help='Call delay to the API, in seconds')
     parser.add_argument('-uind', '--use_index', action='store_true', default=None, help='Use index')
- 
+    parser.add_argument('-decim', '--decimals', type=int, default=2, help="Number of values decimals")
+
+    
     args = parser.parse_args()
     if args.time_delay >= 0.5:
         quoter(args)
