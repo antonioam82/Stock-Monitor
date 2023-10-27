@@ -68,13 +68,13 @@ def quoter(args):
         print(Fore.RED + Style.BRIGHT + str(e) + Fore.RESET + Style.RESET_ALL)
 
 def main():
-    parser = argparse.ArgumentParser(prog="STOCK MONITOR 1.0",description="Show stock quotation in real time",
+    parser = argparse.ArgumentParser(prog="STOCK MONITOR 1.0",description="Show real-time stock quotations.",
                                      epilog="REPO:https://github.com/antonioam82/Stock-Monitor")
-    parser.add_argument('-tick', '--ticker', required=True, type=str, help='Ticker name')
-    parser.add_argument('-clr', '--color', action='store_true', help='Use this action for color close values')
-    parser.add_argument('-delay', '--time_delay', type=float, default=30, help='Call delay to the API, in seconds')
+    parser.add_argument('-tick', '--ticker', required=True, type=str, help='Stock ticker symbol')
+    parser.add_argument('-clr', '--color', action='store_true', help='Use colors for close values')
+    parser.add_argument('-delay', '--time_delay', type=float, default=5, help='Delay between API calls in seconds')
     parser.add_argument('-uind', '--use_index', action='store_true', default=None, help='Use index')
-    parser.add_argument('-decim', '--decimals', type=int, default=2, help="Number of values decimals")
+    parser.add_argument('-decim', '--decimals', type=int, default=2, help='Number of decimal places for values')
 
     
     args = parser.parse_args()
