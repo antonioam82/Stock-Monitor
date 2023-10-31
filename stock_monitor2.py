@@ -27,21 +27,22 @@ def quoter(args):
     else:
         ticker_symbol = args.ticker
     #prev_day = stock_data = yf.download(ticker_symbol, period="1d",interval="1d").tail(1)
-    prev_day = yf.download(ticker_symbol, period="2d", interval="1d")#["Close"].iloc[-2]
-    
-    last_day_open_price = prev_day["Open"].iloc[-2]
-    last_day_high_price = prev_day["High"].iloc[-2]
-    last_day_low_price = prev_day["Low"].iloc[-2]
-    last_day_close_price = prev_day["Close"].iloc[-2]
-    last_day_volume = prev_day["Volume"].iloc[-2]
-
-    dec = args.decimals
-
-    last_datetime = prev_day.index[-1]
-    print(Fore.GREEN + Style.BRIGHT + f"{last_datetime} | Ticker: {ticker_symbol} | Low: {last_day_low_price:.{dec}f} | High: {last_day_high_price:.{dec}f} | "
-          f" Open: {last_day_open_price:.{dec}f} | Volume: {last_day_volume:.{dec}f} | Close: {last_day_close_price:.{dec}f}" + Fore.RESET + Style.RESET_ALL)
     try:
+        prev_day = yf.download(ticker_symbol, period="2d", interval="1d")#["Close"].iloc[-2]
+    
+        last_day_open_price = prev_day["Open"].iloc[-2]
+        last_day_high_price = prev_day["High"].iloc[-2]
+        last_day_low_price = prev_day["Low"].iloc[-2]
+        last_day_close_price = prev_day["Close"].iloc[-2]
+        last_day_volume = prev_day["Volume"].iloc[-2]
+
+        dec = args.decimals
+
+        last_datetime = prev_day.index[-1]
+        
         print(Fore.BLACK + Back.WHITE + f"\nREAL TIME {ticker_symbol} QUOTATION -[PRESS SPACE BAR TO EXIT]" + Fore.RESET + Back.RESET)
+        print(Fore.BLUE + Style.BRIGHT + f"{last_datetime} | Ticker: {ticker_symbol} | Low: {last_day_low_price:.{dec}f} | High: {last_day_high_price:.{dec}f} | "
+          f" Open: {last_day_open_price:.{dec}f} | Volume: {last_day_volume:.{dec}f} | Close: {last_day_close_price:.{dec}f}" + Fore.RESET + Style.RESET_ALL) 
         while stop == False:
             stock_data = yf.download(ticker_symbol, period="1d",interval="1m").tail(1)
             #print(stock_data)
@@ -69,6 +70,8 @@ def quoter(args):
 
             
             diference = last_close_price - last_day_close_price
+            percentage = (diference / last_day_close_price) * 100
+            
             if diference > 0:
                 diference_color = Fore.GREEN + "+"
             elif diference < 0:
@@ -78,7 +81,7 @@ def quoter(args):
             
             
             print(line_color + Style.BRIGHT + f"{current_datetime} | Ticker: {ticker_symbol} | Low: {last_low_price:.{dec}f} | High: {last_high_price:.{dec}f} | Open: {last_open_price:.{dec}f} |"
-                  f" Volume: {last_volume:.{dec}f} | Close: " + color + f"{last_close_price:.{dec}f}    " + diference_color + f"{diference:.{dec}f}" + Fore.RESET + Style.RESET_ALL)
+                  f" Volume: {last_volume:.{dec}f} | Close: " + color + f"{last_close_price:.{dec}f}    " + diference_color + f"{diference:.{dec}f} ({percentage:.{dec}f}%)" + Fore.RESET + Style.RESET_ALL)
 
             prev_value = last_close_price
             time.sleep(args.time_delay)
