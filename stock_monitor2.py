@@ -28,6 +28,7 @@ def quoter(args):
         ticker_symbol = args.ticker
     #prev_day = stock_data = yf.download(ticker_symbol, period="1d",interval="1d").tail(1)
     try:
+        print(Fore.BLACK + Back.WHITE + f"\nREAL TIME {ticker_symbol} QUOTATION -[PRESS SPACE BAR TO EXIT]" + Fore.RESET + Back.RESET)
         prev_day = yf.download(ticker_symbol, period="2d", interval="1d")#["Close"].iloc[-2]
     
         last_day_open_price = prev_day["Open"].iloc[-2]
@@ -39,9 +40,8 @@ def quoter(args):
         dec = args.decimals
 
         last_datetime = prev_day.index[-1]
-        
-        print(Fore.BLACK + Back.WHITE + f"\nREAL TIME {ticker_symbol} QUOTATION -[PRESS SPACE BAR TO EXIT]" + Fore.RESET + Back.RESET)
-        print(Fore.BLUE + Style.BRIGHT + f"{last_datetime} | Ticker: {ticker_symbol} | Low: {last_day_low_price:.{dec}f} | High: {last_day_high_price:.{dec}f} | "
+    
+        print(Fore.YELLOW + Style.BRIGHT + f"{last_datetime} | Ticker: {ticker_symbol} | Low: {last_day_low_price:.{dec}f} | High: {last_day_high_price:.{dec}f} | "
           f" Open: {last_day_open_price:.{dec}f} | Volume: {last_day_volume:.{dec}f} | Close: {last_day_close_price:.{dec}f}" + Fore.RESET + Style.RESET_ALL) 
         while stop == False:
             stock_data = yf.download(ticker_symbol, period="1d",interval="1m").tail(1)
@@ -94,11 +94,11 @@ def quoter(args):
         print(Fore.RED + Style.BRIGHT + str(e) + Fore.RESET + Style.RESET_ALL)
 
 def main():
-    parser = argparse.ArgumentParser(prog="STOCK MONITOR 1.0",description="Show stock quotation in real time",
+    parser = argparse.ArgumentParser(prog="STOCK MONITOR 1.1",description="Show stock quotation in real time",
                                      epilog="REPO:https://github.com/antonioam82/Stock-Monitor")
     parser.add_argument('-tick', '--ticker', required=True, type=str, help='Ticker name')
     parser.add_argument('-clr', '--color', action='store_true', help='Use this action for color close values')
-    parser.add_argument('-delay', '--time_delay', type=float, default=30, help='Call delay to the API, in seconds')
+    parser.add_argument('-delay', '--time_delay', type=float, default=5, help='Call delay to the API, in seconds')
     parser.add_argument('-uind', '--use_index', action='store_true', default=None, help='Use index')
     parser.add_argument('-decim', '--decimals', type=int, default=2, help="Number of values decimals")
 
