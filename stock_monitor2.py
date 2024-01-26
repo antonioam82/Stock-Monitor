@@ -5,9 +5,10 @@ import yfinance as yf
 from pynput import keyboard
 from colorama import init, Fore, Back, Style
 import time
+import warnings
+warnings.filterwarnings("ignore")
 
 init()
-
 stop = False
 
 def on_press(key):
