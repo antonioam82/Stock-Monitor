@@ -6,7 +6,8 @@ from pynput import keyboard
 from colorama import init, Fore, Back, Style
 import time
 import warnings
-warnings.filterwarnings("ignore")
+
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 init()
 stop = False
