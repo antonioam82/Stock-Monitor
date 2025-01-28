@@ -31,7 +31,8 @@ def quoter(args):
     #prev_day = stock_data = yf.download(ticker_symbol, period="1d",interval="1d").tail(1)
     try:
         print(Fore.BLACK + Back.WHITE + f"\nREAL TIME {ticker_symbol} QUOTATION -[PRESS SPACE BAR TO EXIT]" + Fore.RESET + Back.RESET)
-        prev_day = yf.download(ticker_symbol, period="2d", interval="1d")#["Close"].iloc[-2]
+        prev_day = yf.download(ticker_symbol, period="5d", interval="1d")#["Close"].iloc[-2]
+        #print(prev_day.tail())
     
         last_day_open_price = prev_day["Open"].iloc[-2]
         last_day_high_price = prev_day["High"].iloc[-2]
