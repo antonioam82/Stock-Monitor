@@ -7,7 +7,7 @@ from colorama import init, Fore, Back, Style
 import time
 import warnings
 
-warnings.filterwarnings("ignore", category=FutureWarning)
+warnings.filterwarnings("ignore")
 
 init()
 stop = False
@@ -120,3 +120,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
