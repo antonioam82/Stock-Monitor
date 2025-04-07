@@ -54,51 +54,57 @@ def quoter(args):
 
         if downloaded:
             while not stop:
-                stock_data = yf.download(ticker_symbol, period="1d", interval="1m").tail(1)
+                try:
+                    stock_data = yf.download(ticker_symbol, period="1d", interval="1m").tail(1)
 
-                # Convertimos a float los valores más recientes
-                last_open_price = float(stock_data["Open"].iloc[-1])
-                last_high_price = float(stock_data["High"].iloc[-1])
-                last_low_price = float(stock_data["Low"].iloc[-1])
-                last_close_price = float(stock_data["Close"].iloc[-1])
-                last_volume = float(stock_data["Volume"].iloc[-1])
+                    # Convertimos a float los valores más recientes
+                    last_open_price = float(stock_data["Open"].iloc[-1])
+                    last_high_price = float(stock_data["High"].iloc[-1])
+                    last_low_price = float(stock_data["Low"].iloc[-1])
+                    last_close_price = float(stock_data["Close"].iloc[-1])
+                    last_volume = float(stock_data["Volume"].iloc[-1])
 
-                current_datetime = stock_data.index[-1]
+                    current_datetime = stock_data.index[-1]
 
-                # Determinar color de línea
-                if args.color:
-                    line_color = Fore.BLUE
-                    if prev_value is None or last_close_price == prev_value:
-                        color = Fore.YELLOW
-                    elif last_close_price > prev_value:
-                        color = Fore.GREEN
+                    # Determinar color de línea
+                    if args.color:
+                        line_color = Fore.BLUE
+                        if prev_value is None or last_close_price == prev_value:
+                            color = Fore.YELLOW
+                        elif last_close_price > prev_value:
+                            color = Fore.GREEN
+                        else:
+                            color = Fore.RED
                     else:
-                        color = Fore.RED
-                else:
-                    color = Fore.GREEN
-                    line_color = Fore.GREEN
+                        color = Fore.GREEN
+                        line_color = Fore.GREEN
 
-                # Diferencias y porcentaje
-                diference = last_close_price - last_day_close_price
-                percentage = (diference / last_day_close_price) * 100
+                    # Diferencias y porcentaje
+                    diference = last_close_price - last_day_close_price
+                    percentage = (diference / last_day_close_price) * 100
 
-                if diference > 0:
-                    diference_color = Fore.GREEN + "+"
-                elif diference < 0:
-                    diference_color = Fore.RED
-                else:
-                    diference_color = Fore.YELLOW
+                    if diference > 0:
+                        diference_color = Fore.GREEN + "+"
+                    elif diference < 0:
+                        diference_color = Fore.RED
+                    else:
+                        diference_color = Fore.YELLOW
 
-                print(line_color + Style.BRIGHT + f"{current_datetime} | Ticker: {ticker_symbol} | Low: {last_low_price:.{dec}f} | High: {last_high_price:.{dec}f} | Open: {last_open_price:.{dec}f} |"
-                      f" Volume: {last_volume:.{dec}f} | Close: " + color + f"{last_close_price:.{dec}f}    "
-                      + diference_color + f"{diference:.{dec}f} ({percentage:.{dec}f}%)" + Fore.RESET + Style.RESET_ALL)
+                    print(line_color + Style.BRIGHT + f"{current_datetime} | Ticker: {ticker_symbol} | Low: {last_low_price:.{dec}f} | High: {last_high_price:.{dec}f} | Open: {last_open_price:.{dec}f} |"
+                          f" Volume: {last_volume:.{dec}f} | Close: " + color + f"{last_close_price:.{dec}f}    "
+                          + diference_color + f"{diference:.{dec}f} ({percentage:.{dec}f}%)" + Fore.RESET + Style.RESET_ALL)
 
-                prev_value = last_close_price
-                time.sleep(args.time_delay)
+                    prev_value = last_close_price
+                    time.sleep(args.time_delay)
 
-                if stop:
-                    print("\nProcess terminated by user.")
+                    if stop:
+                        print("\nProcess terminated by user.")
+                        break
+
+                except Exception as e:
+                    print(Fore.RED + Style.BRIGHT + "\nUNEXPECTED ERROR: " + str(e) + Fore.RESET + Style.RESET_ALL)
                     break
+         
                 
     except Exception as e:
         print(Fore.RED + Style.BRIGHT + str(e) + Fore.RESET + Style.RESET_ALL)
@@ -120,4 +126,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
