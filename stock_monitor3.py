@@ -6,6 +6,8 @@ from pynput import keyboard
 from colorama import init, Fore, Back, Style
 import time
 import warnings
+import pandas as pd
+import pandas_market_calendars as mcal
 
 warnings.filterwarnings("ignore")
 
@@ -22,10 +24,18 @@ def on_press(key):
 def quoter(args):
     listener = keyboard.Listener(on_press=on_press)
     listener.start()
-    prev_value = None  # Ahora es float o None
+    prev_value = None
     downloaded = False
 
     ticker_symbol = f"^{args.ticker}" if args.use_index else args.ticker
+
+    #######################################################################3
+    cal = mcal.get_calendar("NYSE")
+    today = pd.Timestamp.today().date()
+    five_days_later = today + pd.Timedelta(days=5)
+    schedule = cal.schedule(start_date=today, end_date=five_days_later)
+    print(Fore.BLUE + f'NEXT SESSION: {schedule.iloc[0]["market_open"]}' + Fore.RESET)
+    #######################################################################3
 
     try:
         print(Fore.BLACK + Back.WHITE + f"\nREAL TIME {ticker_symbol} QUOTATION -[PRESS SPACE BAR TO EXIT]" + Fore.RESET + Back.RESET)
@@ -116,7 +126,7 @@ def main():
     parser.add_argument('-clr', '--color', action='store_true', help='Use this action for color close values')
     parser.add_argument('-delay', '--time_delay', type=float, default=5, help='Call delay to the API, in seconds')
     parser.add_argument('-uind', '--use_index', action='store_true', default=None, help='Use index')
-    parser.add_argument('-decim', '--decimals', type=int, default=2, help="Number of values decimals")
+    parser.add_argument('-decim', '--decimals', type=int, default=2, help="Number of value decimals")
 
     args = parser.parse_args()
     if args.time_delay >= 0.5:
