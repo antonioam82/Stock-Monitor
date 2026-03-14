@@ -25,7 +25,8 @@ def is_open_now():
     cal = mcal.get_calendar("NYSE")
     now = pd.Timestamp.now(tz="US/Eastern")  # hora local de NY
     today = now.date()
-
+    
+    # Obtenemos la sesión de hoy
     schedule = cal.schedule(start_date=today, end_date=today)
     
     if schedule.empty:
@@ -35,7 +36,8 @@ def is_open_now():
         next_schedule = cal.schedule(start_date=today, end_date=five_days_later)
         print(Fore.BLUE + f'NEXT SESSION: {next_schedule.iloc[0]["market_open"]}' + Fore.RESET)
         return False
-        
+    
+    # Comprobamos si la hora actual está dentro del horario de mercado
     market_open = schedule.iloc[0]["market_open"]
     market_close = schedule.iloc[0]["market_close"]
     
@@ -63,36 +65,37 @@ def quoter(args):
     if len(schedule) == 0:
         print("empty")
     #print(Fore.BLUE + f'NEXT SESSION: {schedule.iloc[0]["market_open"]}' + Fore.RESET)'''
-    is_open = is_open_now()
+    
     #######################################################################3
-    if is_open:
+    #if is_open:
         
+    try:
+        print(Fore.BLACK + Back.WHITE + f"\nREAL TIME {ticker_symbol} QUOTATION -[PRESS SPACE BAR TO EXIT]" + Fore.RESET + Back.RESET)
+
         try:
-            print(Fore.BLACK + Back.WHITE + f"\nREAL TIME {ticker_symbol} QUOTATION -[PRESS SPACE BAR TO EXIT]" + Fore.RESET + Back.RESET)
-
-            try:
-                prev_day = yf.download(ticker_symbol, period="5d", interval="1d")
+            prev_day = yf.download(ticker_symbol, period="5d", interval="1d")
         
 
-                # Convertimos todos los valores en float
-                last_day_open_price = float(prev_day["Open"].iloc[-2])
-                last_day_high_price = float(prev_day["High"].iloc[-2])
-                last_day_low_price = float(prev_day["Low"].iloc[-2])
-                last_day_close_price = float(prev_day["Close"].iloc[-2])
-                last_day_volume = float(prev_day["Volume"].iloc[-2])
+            # Convertimos todos los valores en float
+            last_day_open_price = float(prev_day["Open"].iloc[-2])
+            last_day_high_price = float(prev_day["High"].iloc[-2])
+            last_day_low_price = float(prev_day["Low"].iloc[-2])
+            last_day_close_price = float(prev_day["Close"].iloc[-2])
+            last_day_volume = float(prev_day["Volume"].iloc[-2])
 
-                dec = args.decimals
-                last_datetime = prev_day.index[-2]
+            dec = args.decimals
+            last_datetime = prev_day.index[-2]
 
-                print(Fore.YELLOW + Style.BRIGHT + f"{last_datetime} | Ticker: {ticker_symbol} | Low: {last_day_low_price:.{dec}f} | High: {last_day_high_price:.{dec}f} |"
-                      f" Open: {last_day_open_price:.{dec}f} | Volume: {last_day_volume:.{dec}f} | Close: {last_day_close_price:.{dec}f}" + Fore.RESET + Style.RESET_ALL)
-                downloaded = True
+            print(Fore.YELLOW + Style.BRIGHT + f"{last_datetime} | Ticker: {ticker_symbol} | Low: {last_day_low_price:.{dec}f} | High: {last_day_high_price:.{dec}f} |"
+                    f" Open: {last_day_open_price:.{dec}f} | Volume: {last_day_volume:.{dec}f} | Close: {last_day_close_price:.{dec}f}" + Fore.RESET + Style.RESET_ALL)
+            downloaded = True
+            is_open = is_open_now()###############################
         
-            except Exception as e:
-                print(Fore.RED + Style.BRIGHT + f"ERROR: Ticker '{ticker_symbol}' does not exist or is invalid. Please check!" + Fore.RESET + Style.RESET_ALL)
-                #stop = True
+        except Exception as e:
+            print(Fore.RED + Style.BRIGHT + f"ERROR: Ticker '{ticker_symbol}' does not exist or is invalid. Please check!" + Fore.RESET + Style.RESET_ALL)
+            #stop = True
 
-            if downloaded:
+            if downloaded and is_open:
                 while not stop:
                     try:
                         stock_data = yf.download(ticker_symbol, period="1d", interval="1m").tail(1)
@@ -146,8 +149,8 @@ def quoter(args):
                         break
          
                 
-        except Exception as e:
-            print(Fore.RED + Style.BRIGHT + str(e) + Fore.RESET + Style.RESET_ALL)
+    except Exception as e:
+        print(Fore.RED + Style.BRIGHT + str(e) + Fore.RESET + Style.RESET_ALL)
 
     #print("NADA POR AQUI")
 
