@@ -14,6 +14,20 @@ warnings.filterwarnings("ignore")
 init()
 stop = False
 
+MARKET_SUFFIXS = {
+    "": "NYSE",
+    #"": "NASDAQ",   
+    "T": "JPX",
+    "L": "LSE",
+    "TO": "TSX",
+    "HK": "HKEX",
+    "SS": "SSE",
+    "AX": "ASX",
+    "NS": "NSE",
+    "BO": "BSE",
+    "SW": "SIX",
+}
+
 def on_press(key):
     global stop
     if key == keyboard.Key.space:
@@ -21,8 +35,8 @@ def on_press(key):
         print('Wait until application ends...')
         return False
 
-def is_open_now():
-    cal = mcal.get_calendar("NYSE")
+def is_open_now(m):
+    cal = mcal.get_calendar(m)
     now = pd.Timestamp.now(tz="US/Eastern")  # hora local de NY
     today = now.date()
     
@@ -30,7 +44,7 @@ def is_open_now():
     schedule = cal.schedule(start_date=today, end_date=today)
     
     if schedule.empty:
-        print(Fore.BLUE + "NYSE CURRENTLY CLOSED TODAY" + Fore.RESET)
+        print(Fore.BLUE + f"{m} CURRENTLY CLOSED TODAY" + Fore.RESET)
         # Próxima sesión en los próximos 5 días
         five_days_later = today + pd.Timedelta(days=5)
         next_schedule = cal.schedule(start_date=today, end_date=five_days_later)
@@ -45,7 +59,7 @@ def is_open_now():
         #print(Fore.GREEN + "NYSE IS OPEN NOW" + Fore.RESET)
         return True
     else:
-        print(Fore.RED + "NYSE IS CLOSED NOW" + Fore.RESET)
+        print(Fore.RED + f"{m} IS CLOSED NOW" + Fore.RESET)
         print(Fore.BLUE + f'NEXT OPEN: {market_open}' + Fore.RESET)
         return False
 
@@ -55,7 +69,13 @@ def quoter(args):
     prev_value = None
     downloaded = False
 
-    ticker_symbol = f"^{args.ticker}" if args.use_index else args.ticker
+    #ticker_symbol = f"^{args.ticker}" if args.use_index else args.ticker
+    ticker_symbol = args.ticker
+    if "." in ticker_symbol:
+        market = ticker_symbol.split(".")[1]
+    else:
+        market = ""
+    print("MERCADO: ",market)
 
     #######################################################################3
     '''cal = mcal.get_calendar("NYSE")
@@ -89,7 +109,7 @@ def quoter(args):
             print(Fore.YELLOW + Style.BRIGHT + f"{last_datetime} | Ticker: {ticker_symbol} | Low: {last_day_low_price:.{dec}f} | High: {last_day_high_price:.{dec}f} |"
                     f" Open: {last_day_open_price:.{dec}f} | Volume: {last_day_volume:.{dec}f} | Close: {last_day_close_price:.{dec}f}" + Fore.RESET + Style.RESET_ALL)
             downloaded = True
-            is_open = is_open_now()###############################
+            is_open = is_open_now(MARKET_SUFFIXS[market])###############################
         
         except Exception as e:
             print(Fore.RED + Style.BRIGHT + f"ERROR: Ticker '{ticker_symbol}' does not exist or is invalid. Please check!" + Fore.RESET + Style.RESET_ALL)
