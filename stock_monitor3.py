@@ -37,7 +37,7 @@ def on_press(key):
 
 def is_open_now(m):
     cal = mcal.get_calendar(m)
-    now = pd.Timestamp.now(tz="US/Eastern")  # hora local de NY
+    now = pd.Timestamp.now(tz="US/Eastern")  # ESTO HAY QUE CORREGIRLO
     today = now.date()
     
     # Obtenemos la sesión de hoy
@@ -191,4 +191,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
