@@ -37,7 +37,8 @@ def on_press(key):
 
 def is_open_now(m):
     cal = mcal.get_calendar(m)
-    now = pd.Timestamp.now(tz="US/Eastern")  # ESTO HAY QUE CORREGIRLO
+    #now = pd.Timestamp.now(tz="US/Eastern")  # ESTO HAY QUE CORREGIRLO
+    now = pd.Timestamp.now()  # ESTO HAY QUE CORREGIRLO
     today = now.date()
     
     # Obtenemos la sesión de hoy
@@ -109,7 +110,12 @@ def quoter(args):
             print(Fore.YELLOW + Style.BRIGHT + f"{last_datetime} | Ticker: {ticker_symbol} | Low: {last_day_low_price:.{dec}f} | High: {last_day_high_price:.{dec}f} |"
                     f" Open: {last_day_open_price:.{dec}f} | Volume: {last_day_volume:.{dec}f} | Close: {last_day_close_price:.{dec}f}" + Fore.RESET + Style.RESET_ALL)
             downloaded = True
-            is_open = is_open_now(MARKET_SUFFIXS[market])###############################
+
+            if not args.active_calendar:
+                is_open = is_open_now(MARKET_SUFFIXS[market])###############################
+            else:
+                is_open = True
+                
         
         except Exception as e:
             print(Fore.RED + Style.BRIGHT + f"ERROR: Ticker '{ticker_symbol}' does not exist or is invalid. Please check!" + Fore.RESET + Style.RESET_ALL)
@@ -182,6 +188,7 @@ def main():
     parser.add_argument('-delay', '--time_delay', type=float, default=5, help='Call delay to the API, in seconds')
     parser.add_argument('-uind', '--use_index', action='store_true', default=None, help='Use index')
     parser.add_argument('-decim', '--decimals', type=int, default=2, help="Number of value decimals")
+    parser.add_argument('-atc', '--active_calendar', action='store_true', help='Force to show results despite market currently closed')
 
     args = parser.parse_args()
     if args.time_delay >= 0.5:
@@ -191,3 +198,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
