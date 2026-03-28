@@ -14,7 +14,7 @@ warnings.filterwarnings("ignore")
 init()
 stop = False
 
-MARKET_SUFFIXS = {
+'''MARKET_SUFFIXS = {
     "": "NYSE",
     #"": "NASDAQ",   
     "T": "JPX",
@@ -26,7 +26,7 @@ MARKET_SUFFIXS = {
     "NS": "NSE",
     "BO": "BSE",
     "SW": "SIX",
-}
+}'''
 
 def on_press(key):
     global stop
@@ -35,17 +35,16 @@ def on_press(key):
         print('Wait until application ends...')
         return False
 
-def is_open_now(m):
-    cal = mcal.get_calendar(m)
-    #now = pd.Timestamp.now(tz="US/Eastern")  # ESTO HAY QUE CORREGIRLO
-    now = pd.Timestamp.now()  # ESTO HAY QUE CORREGIRLO
+def is_open_now():
+    cal = mcal.get_calendar('NYSE')
+    now = pd.Timestamp.now(tz="US/Eastern")
     today = now.date()
     
     # Obtenemos la sesión de hoy
     schedule = cal.schedule(start_date=today, end_date=today)
     
     if schedule.empty:
-        print(Fore.BLUE + f"{m} CURRENTLY CLOSED TODAY" + Fore.RESET)
+        print(Fore.BLUE + "NYSE MARKET CURRENTLY CLOSED TODAY" + Fore.RESET)
         # Próxima sesión en los próximos 5 días
         five_days_later = today + pd.Timedelta(days=5)
         next_schedule = cal.schedule(start_date=today, end_date=five_days_later)
@@ -70,13 +69,13 @@ def quoter(args):
     prev_value = None
     downloaded = False
 
-    #ticker_symbol = f"^{args.ticker}" if args.use_index else args.ticker
-    ticker_symbol = args.ticker
+    ticker_symbol = f"^{args.ticker}" if args.use_index else args.ticker
+    '''ticker_symbol = args.ticker
     if "." in ticker_symbol:
         market = ticker_symbol.split(".")[1]
     else:
         market = ""
-    print("MERCADO: ",market)
+    print("MERCADO: ",market)'''
 
     #######################################################################3
     '''cal = mcal.get_calendar("NYSE")
@@ -87,8 +86,7 @@ def quoter(args):
         print("empty")
     #print(Fore.BLUE + f'NEXT SESSION: {schedule.iloc[0]["market_open"]}' + Fore.RESET)'''
     
-    #######################################################################3
-    #if is_open:
+    #######################################################################
         
     try:
         print(Fore.BLACK + Back.WHITE + f"\nREAL TIME {ticker_symbol} QUOTATION -[PRESS SPACE BAR TO EXIT]" + Fore.RESET + Back.RESET)
@@ -112,7 +110,7 @@ def quoter(args):
             downloaded = True
 
             if not args.active_calendar:
-                is_open = is_open_now(MARKET_SUFFIXS[market])###############################
+                is_open = is_open_now()###############################
             else:
                 is_open = True
                 
