@@ -92,7 +92,8 @@ def quoter(args):
         print(Fore.BLACK + Back.WHITE + f"\nREAL TIME {ticker_symbol} QUOTATION -[PRESS SPACE BAR TO EXIT]" + Fore.RESET + Back.RESET)
 
         try:
-            prev_day = yf.download(ticker_symbol, period="5d", interval="1d")
+            #prev_day = yf.download(ticker_symbol, period="5d", interval="1d")
+            prev_day = yf.download(ticker_symbol, period="5d", interval="1d", auto_adjust=False, multi_level_index=False)
         
 
             # Convertimos todos los valores en float
@@ -116,7 +117,7 @@ def quoter(args):
                 
         
         except Exception as e:
-            print(Fore.RED + Style.BRIGHT + f"ERROR: Ticker '{ticker_symbol}' does not exist or is invalid. Please check!" + Fore.RESET + Style.RESET_ALL)
+            print(Fore.RED + Style.BRIGHT + f"ERROR: {str(e)}" + Fore.RESET + Style.RESET_ALL)
             #stop = True
 
         if downloaded and is_open:
