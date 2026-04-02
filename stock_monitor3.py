@@ -59,7 +59,7 @@ def is_open_now():
         #print(Fore.GREEN + "NYSE IS OPEN NOW" + Fore.RESET)
         return True
     else:
-        print(Fore.RED + f"{m} IS CLOSED NOW" + Fore.RESET)
+        print(Fore.RED + f"NYSE MARKET IS CLOSED NOW" + Fore.RESET)
         print(Fore.BLUE + f'NEXT OPEN: {market_open}' + Fore.RESET)
         return False
 
@@ -92,8 +92,8 @@ def quoter(args):
         print(Fore.BLACK + Back.WHITE + f"\nREAL TIME {ticker_symbol} QUOTATION -[PRESS SPACE BAR TO EXIT]" + Fore.RESET + Back.RESET)
 
         try:
-            #prev_day = yf.download(ticker_symbol, period="5d", interval="1d")
-            prev_day = yf.download(ticker_symbol, period="5d", interval="1d", auto_adjust=False, multi_level_index=False)
+            prev_day = yf.download(ticker_symbol, period="5d", interval="1d")
+            #prev_day = yf.download(ticker_symbol, period="5d", interval="1d", auto_adjust=False, multi_level_index=False)
         
 
             # Convertimos todos los valores en float
