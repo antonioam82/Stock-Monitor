@@ -7,6 +7,7 @@ from colorama import init, Fore, Back, Style
 import time
 import warnings
 import pandas as pd
+from tzlocal import get_localzone
 import pandas_market_calendars as mcal
 
 warnings.filterwarnings("ignore")
@@ -35,32 +36,47 @@ def on_press(key):
         print('Wait until application ends...')
         return False
 
+from tzlocal import get_localzone
+import pandas as pd
+import pandas_market_calendars as mcal
+from colorama import Fore
+
 def is_open_now():
     cal = mcal.get_calendar('NYSE')
-    now = pd.Timestamp.now(tz="US/Eastern")
+
+    local_tz = get_localzone()
+
+    now = pd.Timestamp.now(tz=local_tz)
     today = now.date()
-    
-    # Obtenemos la sesión de hoy
+
     schedule = cal.schedule(start_date=today, end_date=today)
-    
+
     if schedule.empty:
         print(Fore.BLUE + "NYSE MARKET CURRENTLY CLOSED TODAY" + Fore.RESET)
-        # Próxima sesión en los próximos 5 días
+
         five_days_later = today + pd.Timedelta(days=5)
         next_schedule = cal.schedule(start_date=today, end_date=five_days_later)
-        print(Fore.BLUE + f'NEXT SESSION: {next_schedule.iloc[0]["market_open"]}' + Fore.RESET)
+
+        if not next_schedule.empty:
+            next_open_local = next_schedule.iloc[0]["market_open"].tz_convert(local_tz)
+            print(Fore.BLUE + f'NEXT SESSION: {next_open_local}' + Fore.RESET)
         return False
-    
-    # Comprobamos si la hora actual está dentro del horario de mercado
+
     market_open = schedule.iloc[0]["market_open"]
     market_close = schedule.iloc[0]["market_close"]
-    
+
+    # CONVERSION A HORA LOCAL
+    market_open_local = market_open.tz_convert(local_tz)
+    market_close_local = market_close.tz_convert(local_tz)
+
+    print(Fore.BLUE + f'OPEN (LOCAL): {market_open_local}' + Fore.RESET)
+    print(Fore.BLUE + f'CLOSE (LOCAL): {market_close_local}' + Fore.RESET)
+
     if market_open <= now <= market_close:
-        #print(Fore.GREEN + "NYSE IS OPEN NOW" + Fore.RESET)
         return True
     else:
-        print(Fore.RED + f"NYSE MARKET IS CLOSED NOW" + Fore.RESET)
-        print(Fore.BLUE + f'NEXT OPEN: {market_open}' + Fore.RESET)
+        print(Fore.RED + "NYSE MARKET IS CLOSED NOW" + Fore.RESET)
+        print(Fore.BLUE + f'NEXT OPEN: {market_open_local}' + Fore.RESET)
         return False
 
 def quoter(args):
