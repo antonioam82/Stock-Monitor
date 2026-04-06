@@ -67,10 +67,10 @@ def is_open_now():
 
     # CONVERSION A HORA LOCAL
     market_open_local = market_open.tz_convert(local_tz)
-    market_close_local = market_close.tz_convert(local_tz)
+    #market_close_local = market_close.tz_convert(local_tz)
 
-    print(Fore.BLUE + f'OPEN (LOCAL): {market_open_local}' + Fore.RESET)
-    print(Fore.BLUE + f'CLOSE (LOCAL): {market_close_local}' + Fore.RESET)
+    #print(Fore.BLUE + f'OPEN (LOCAL): {market_open_local}' + Fore.RESET)
+    #print(Fore.BLUE + f'CLOSE (LOCAL): {market_close_local}' + Fore.RESET)
 
     if market_open <= now <= market_close:
         return True
